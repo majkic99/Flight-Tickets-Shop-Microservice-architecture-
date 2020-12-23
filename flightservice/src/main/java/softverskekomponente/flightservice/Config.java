@@ -15,14 +15,10 @@ public class Config {
 	public String brokerUrl;
 
 	@Bean
-	public Queue newAccountEmailQueue() {
-		return new ActiveMQQueue("NewAccountEmail.queue");
+	public Queue canceledFlightsQueue() {
+		return new ActiveMQQueue("CanceledFlights.queue");
 	}
 	
-	@Bean
-	public Queue changedAccountEmailQueue() {
-		return new ActiveMQQueue("AccountChanged.queue");
-	}
 	
 	
 
