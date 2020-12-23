@@ -14,15 +14,6 @@ public class Config {
 	@Value("${activemq.broker-url}")
 	public String brokerUrl;
 
-	@Bean
-	public Queue newAccountEmailQueue() {
-		return new ActiveMQQueue("NewAccountEmail.queue");
-	}
-	
-	@Bean
-	public Queue changedAccountEmailQueue() {
-		return new ActiveMQQueue("AccountChanged.queue");
-	}
 	
 	
 

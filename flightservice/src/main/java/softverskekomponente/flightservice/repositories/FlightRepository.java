@@ -10,4 +10,6 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
 
 	@Query("select f from Flight f where f.airplane.id = :airplaneID")
 	boolean existsAirplaneID(long airplaneID);
+	
+
 }

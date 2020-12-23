@@ -1,11 +1,14 @@
 package softverskekomponente.ticketservice.controllers;
 
 import java.util.Date;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -17,6 +20,7 @@ import softverskekomponente.ticketservice.forms.BuyTicketForm;
 import softverskekomponente.ticketservice.repositories.TicketRepository;
 import softverskekomponente.ticketservice.utils.UtilsMethods;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("")
 public class TicketController {
@@ -29,7 +33,12 @@ public class TicketController {
 		this.ticketRepository = ticketRepository;
 
 	}
-
+	
+	@GetMapping("/test")
+	public String string() {
+		return "test";
+	}
+	
 	@PostMapping("/buyTicket")
 	public ResponseEntity<String> buyTicket(@RequestBody BuyTicketForm buyTicketForm,
 			@RequestHeader(value = "Authorization") String token) {
