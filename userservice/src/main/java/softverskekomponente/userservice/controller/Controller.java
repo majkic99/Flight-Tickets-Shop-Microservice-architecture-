@@ -9,11 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.auth0.jwt.JWT;
@@ -22,12 +24,17 @@ import com.auth0.jwt.algorithms.Algorithm;
 import softverskekomponente.userservice.entities.CreditCard;
 import softverskekomponente.userservice.entities.User;
 import softverskekomponente.userservice.forms.CreditCardForm;
+import softverskekomponente.userservice.forms.CreditCardFormOutput;
 import softverskekomponente.userservice.forms.RegistrationForm;
 import softverskekomponente.userservice.forms.UserInfoForm;
 import softverskekomponente.userservice.repositories.AdminRepository;
 import softverskekomponente.userservice.repositories.CreditCardsRepository;
 import softverskekomponente.userservice.repositories.UserRepository;
 import static softverskekomponente.userservice.security.SecurityConstants.*;
+import softverskekomponente.userservice.entities.enums.Rank;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.jms.Queue;
 
@@ -58,16 +65,100 @@ public class Controller {
 		this.adminRepo = adminRepo;
 	}
 	
-	@GetMapping("/isAdmin")
-	public ResponseEntity<String> checkIfAdmin(@RequestHeader(value = HEADER_STRING) String token){
+	@GetMapping("findUserID")
+	public ResponseEntity<Integer> findUserID(@RequestHeader(value = HEADER_STRING) String token){
 		String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
 				.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
-		System.out.println(email);
-		if (adminRepo.existsByEmail(email)) {
-			return new ResponseEntity<>("YES ADMIN", HttpStatus.ACCEPTED);
-		}else {
-			return new ResponseEntity<>("NO ADMIN", HttpStatus.FORBIDDEN);
+		User user = userRepo.findByEmail(email);
+		if (user != null) {
+			Integer response = (int) user.getId();
+			return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
 		}
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+	
+	@GetMapping("/addMilesToUser/{x}")
+	public ResponseEntity<Integer> addMilesToUser(@PathVariable int x , @RequestHeader(value = HEADER_STRING) String token){
+		String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
+				.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
+		User user = userRepo.findByEmail(email);
+		if (user != null) {
+			user.setKilometersTraveled(user.getKilometersTraveled() + x);
+			userRepo.saveAndFlush(user);
+			return new ResponseEntity<>(user.getKilometersTraveled(), HttpStatus.ACCEPTED);
+		}
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			
+	}
+	
+	
+	@GetMapping("/benefitlevel")
+	public ResponseEntity<String> getBenefitLevel(@RequestHeader(value = HEADER_STRING) String token){
+		String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
+				.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
+		User user = userRepo.findByEmail(email);
+		if (user != null) {
+			switch (user.getRank()) {
+			case GOLD:
+				return new ResponseEntity<>("Gold", HttpStatus.ACCEPTED);
+				
+			case SILVER:
+				return new ResponseEntity<>("Silver", HttpStatus.ACCEPTED);
+				
+			case BRONZE:
+				return new ResponseEntity<>("Bronze", HttpStatus.ACCEPTED);
+				
+			}
+		}else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+	
+	@GetMapping("/creditcards")
+	public ResponseEntity<List<CreditCardFormOutput>> usersCreditCards(@RequestHeader(value = HEADER_STRING) String token){
+		try {
+			
+			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
+					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
+			User user = userRepo.findByEmail(email);
+			if (user != null) {
+				
+				List<CreditCard> lista = ccRepo.getCreditCardsByUserID(user.getId());
+				List<CreditCardFormOutput> response = new ArrayList<>();
+				for (CreditCard cc : lista) {
+					CreditCardFormOutput ccform = new CreditCardFormOutput(cc.getName(), cc.getSurname(), cc.getCardNumber());
+					response.add(ccform);
+				}
+				
+				return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+			}else {
+				return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+			}
+		} catch (Exception e) {
+			System.out.println("exception");
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	
+	@GetMapping("/isAdmin")
+	public ResponseEntity<String> checkIfAdmin(@RequestHeader(value = HEADER_STRING) String token){
+		try {
+			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
+					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
+			
+			if (adminRepo.existsByEmail(email)) {
+				return new ResponseEntity<>("YES ADMIN", HttpStatus.ACCEPTED);
+			}else {
+				return new ResponseEntity<>("NO ADMIN", HttpStatus.FORBIDDEN);
+			}
+		} catch (Exception e) {
+			
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
 	}
 	
 	@PostMapping("/register")

@@ -22,7 +22,9 @@ public class CreditCard {
 	private String cardNumber;
 	private int cvcNumber;
 	
-	
+	public CreditCard() {
+		
+	}
 	public CreditCard(User user, String name, String surname, String cardNumber, int cvcNumber) {
 		super();
 		this.user = user;
