@@ -49,15 +49,23 @@ public class AdminController {
 		this.airplaneRepo = airplaneRepo;
 		this.flightRepo = flightRepo;
 	}
-	@GetMapping("/home")
-	public String home() {
-		System.out.println("home");
-		return "HOME";
-	}
 	
-	@GetMapping("/test")
-	public String test(@RequestHeader(value = HEADER_STRING) String token) {
-		return token;
+	
+
+	@GetMapping("/findCapacity/{x}")
+	public ResponseEntity<Integer> findCapacityByFlightID(@PathVariable long x){
+		try {
+			Optional<Flight> flight = flightRepo.findById(x);
+			if (flight.isPresent()) {
+				return new ResponseEntity<>(flight.get().getAirplane().getCapacity(),HttpStatus.ACCEPTED);
+			}else {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
+		
+		
 	}
 	
 	@PostMapping("/addAirplane")
