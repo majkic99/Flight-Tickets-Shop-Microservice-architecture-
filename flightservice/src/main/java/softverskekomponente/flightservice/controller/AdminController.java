@@ -51,7 +51,38 @@ public class AdminController {
 	}
 	
 	
-
+	@GetMapping("/findKilometers/{x}")
+	public ResponseEntity<Integer> findKilometersByFlightID(@PathVariable long x){
+		try {
+			Optional<Flight> flight = flightRepo.findById(x);
+			if (flight.isPresent()) {
+				return new ResponseEntity<>(flight.get().getLengthinKM(),HttpStatus.ACCEPTED);
+			}else {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
+		
+		
+	}
+	
+	@GetMapping("/findPrice/{x}")
+	public ResponseEntity<Integer> findPriceByFlightID(@PathVariable long x){
+		try {
+			Optional<Flight> flight = flightRepo.findById(x);
+			if (flight.isPresent()) {
+				return new ResponseEntity<>(flight.get().getPrice(),HttpStatus.ACCEPTED);
+			}else {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
+		
+		
+	}
+	
 	@GetMapping("/findCapacity/{x}")
 	public ResponseEntity<Integer> findCapacityByFlightID(@PathVariable long x){
 		try {
