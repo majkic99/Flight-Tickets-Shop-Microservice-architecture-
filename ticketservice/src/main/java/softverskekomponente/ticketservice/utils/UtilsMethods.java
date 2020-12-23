@@ -1,4 +1,4 @@
-package softverskekomponente.userservice.utils;
+package softverskekomponente.ticketservice.utils;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -7,11 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 public class UtilsMethods {
-
-	public static ResponseEntity<Integer> sendGetInt(String url) {
+	
+	
+	public static ResponseEntity<Integer> sendGet(String url, String token) {
 
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", token);
 
 		HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 
@@ -20,11 +22,12 @@ public class UtilsMethods {
 		return response;
 	}
 
-	public static ResponseEntity<Integer> sendPostInt(String url, Object body) {
+	public static ResponseEntity<Integer> sendPost(String url, Object body, String token) {
 
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
-
+		headers.add("Authorization", token);
+		
 		HttpEntity<Object> entity = new HttpEntity<Object>(body, headers);
 
 		ResponseEntity<Integer> response = restTemplate.exchange(url, HttpMethod.POST, entity, Integer.class);
@@ -32,10 +35,11 @@ public class UtilsMethods {
 		return response;
 	}
 	
-	public static ResponseEntity<String> sendGetString(String url) {
+	public static ResponseEntity<String> sendGetString(String url, String token) {
 
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", token);
 
 		HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 
@@ -43,5 +47,5 @@ public class UtilsMethods {
 
 		return response;
 	}
-
+	
 }
