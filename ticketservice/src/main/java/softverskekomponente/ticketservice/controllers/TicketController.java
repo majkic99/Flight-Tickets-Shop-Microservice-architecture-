@@ -34,9 +34,7 @@ public class TicketController {
 
 		this.ticketRepository = ticketRepository;
 
-	}
-	
-	
+	}	
 	
 	@GetMapping("/usersonFlight/{flightID}")
 	public ResponseEntity<List<Integer>> usersOnFlight(@PathVariable int flightID){
@@ -72,7 +70,7 @@ public class TicketController {
 	
 	
 	@PostMapping("/buyTicket")
-	public ResponseEntity<String> buyTicket(@RequestBody BuyTicketForm buyTicketForm,
+	public ResponseEntity<Object> buyTicket(@RequestBody BuyTicketForm buyTicketForm,
 			@RequestHeader(value = "Authorization") String token) {
 
 		try {
@@ -118,6 +116,9 @@ public class TicketController {
 					new Date());
 			
 			ticketRepository.save(ticket);
+			
+			buyTicketForm.setDate(ticket.getDate());
+			return new ResponseEntity<>(buyTicketForm, HttpStatus.ACCEPTED);
 
 		} catch (Exception e) {
 
@@ -125,7 +126,34 @@ public class TicketController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
-		return null;
+	}
+	
+	@GetMapping("ticketsFromUser")
+	public ResponseEntity<List<Ticket>> allTicketsFromUser(@RequestHeader(value = "Authorization") String token){
+		
+		try {
+			
+			ResponseEntity<Integer> responseUserID = UtilsMethods
+					.sendGet("http://localhost:8762/userservice/findUserID/", token);
+			
+			List<Ticket> response = ticketRepository.findByIdUser(responseUserID.getBody());
+			return new ResponseEntity<>(response , HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+	}
+	
+	@GetMapping("tickets")
+	public ResponseEntity<List<Ticket>> allTickets(){
+		
+		try {
+			List<Ticket> response = ticketRepository.findAll();
+			return new ResponseEntity<>(response , HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
 	}
 
 }

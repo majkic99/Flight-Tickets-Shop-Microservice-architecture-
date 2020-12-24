@@ -2,7 +2,6 @@ package softverskekomponente.userservice.controller;
 
 
 
-import org.hibernate.boot.archive.spi.JarFileEntryUrlAdjuster;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.auth0.jwt.JWT;
@@ -31,7 +29,6 @@ import softverskekomponente.userservice.repositories.AdminRepository;
 import softverskekomponente.userservice.repositories.CreditCardsRepository;
 import softverskekomponente.userservice.repositories.UserRepository;
 import static softverskekomponente.userservice.security.SecurityConstants.*;
-import softverskekomponente.userservice.entities.enums.Rank;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -6,12 +6,13 @@ public class BuyTicketForm {
 
 	private int idFlight;
 	private int idCard;
-	
+	private Date date;
 
 	public BuyTicketForm(int idFlight, int idCard, Date date) {
 
 		this.idFlight = idFlight;
 		this.idCard = idCard;
+		this.date = date;
 		
 
 	}
@@ -30,6 +31,14 @@ public class BuyTicketForm {
 
 	public void setIdCard(int idCard) {
 		this.idCard = idCard;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	
