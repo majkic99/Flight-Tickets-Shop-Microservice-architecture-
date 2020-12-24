@@ -79,15 +79,18 @@ public class Controller {
 	
 	@GetMapping("/addKMToUser/{x}")
 	public ResponseEntity<Integer> addMilesToUser(@PathVariable int x , @RequestHeader(value = HEADER_STRING) String token){
-		String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
-				.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
-		User user = userRepo.findByEmail(email);
-		if (user != null) {
-			user.setKilometersTraveled(user.getKilometersTraveled() + x);
-			userRepo.saveAndFlush(user);
-			return new ResponseEntity<>(user.getKilometersTraveled(), HttpStatus.ACCEPTED);
+		synchronized (this) {
+			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
+					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
+			User user = userRepo.findByEmail(email);
+			if (user != null) {
+				user.setKilometersTraveled(user.getKilometersTraveled() + x);
+				userRepo.saveAndFlush(user);
+				return new ResponseEntity<>(user.getKilometersTraveled(), HttpStatus.ACCEPTED);
+			}
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		
 			
 	}
 	
@@ -165,19 +168,22 @@ public class Controller {
 	public ResponseEntity<String> register(@RequestBody RegistrationForm registrationForm) {
 
 		try {
-			if (userRepo.existsByEmail(registrationForm.getEmail())) {
-				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			synchronized (this) {
+				if (userRepo.existsByEmail(registrationForm.getEmail())) {
+					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+				}
+				
+				// iscitavamo entitet iz registracione forme
+				User user = new User(registrationForm.getIme(), registrationForm.getPrezime(), registrationForm.getEmail(),
+						encoder.encode(registrationForm.getPassword()), registrationForm.getPassportNumber());
+
+				// cuvamo u nasoj bazi ovaj entitet
+				userRepo.saveAndFlush(user);
+				
+				jmsTemplate.convertAndSend(newAccountEmailQueue,registrationForm.getEmail());
+				return new ResponseEntity<>("Succesfully registered user - ID:" + user.getId(), HttpStatus.ACCEPTED);
 			}
 			
-			// iscitavamo entitet iz registracione forme
-			User user = new User(registrationForm.getIme(), registrationForm.getPrezime(), registrationForm.getEmail(),
-					encoder.encode(registrationForm.getPassword()), registrationForm.getPassportNumber());
-
-			// cuvamo u nasoj bazi ovaj entitet
-			userRepo.saveAndFlush(user);
-			
-			jmsTemplate.convertAndSend(newAccountEmailQueue,registrationForm.getEmail());
-			return new ResponseEntity<>("Succesfully registered user - ID:" + user.getId(), HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -205,18 +211,21 @@ public class Controller {
 	@PostMapping("/addcc")
 	public ResponseEntity<String> addCreditCard(@RequestBody CreditCardForm ccForm, @RequestHeader(value = HEADER_STRING) String token ){
 		try {
-			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
-					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
+			synchronized (token) {
+				String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
+						.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
 
-			User user = userRepo.findByEmail(email);
-			if (user != null) {
-				CreditCard cc = new CreditCard(user, ccForm.getName(), ccForm.getSurname(), ccForm.getCardNumber(), ccForm.getCvcNumber());
-				ccRepo.saveAndFlush(cc);
-				return new ResponseEntity<>(HttpStatus.ACCEPTED);
-				
-			}else {
-				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+				User user = userRepo.findByEmail(email);
+				if (user != null) {
+					CreditCard cc = new CreditCard(user, ccForm.getName(), ccForm.getSurname(), ccForm.getCardNumber(), ccForm.getCvcNumber());
+					ccRepo.saveAndFlush(cc);
+					return new ResponseEntity<>(HttpStatus.ACCEPTED);
+					
+				}else {
+					return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+				}
 			}
+			
 		} catch (Exception e) {
 			// TODO: handle exception
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -226,34 +235,37 @@ public class Controller {
 	
 	@PutMapping("/updateUser")
 	public ResponseEntity<String> updateUser(@RequestBody RegistrationForm regForm, @RequestHeader(value = HEADER_STRING) String token){
-		String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
-				.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
+		
+		synchronized (this) {
+			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
+					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
 
-		User user = userRepo.findByEmail(email);
-		if (user != null) {
-			if (regForm.getEmail() != null) {
-				user.setEmail(regForm.getEmail());
-				jmsTemplate.convertAndSend(changedAccountEmailQueue,regForm.getEmail());
+			User user = userRepo.findByEmail(email);
+			if (user != null) {
+				if (regForm.getEmail() != null) {
+					user.setEmail(regForm.getEmail());
+					jmsTemplate.convertAndSend(changedAccountEmailQueue,regForm.getEmail());
+					
+				}
+				if (regForm.getIme() != null) {
+					user.setIme(regForm.getIme());
+				}
+				if (regForm.getPrezime() != null) {
+					user.setPrezime(regForm.getPrezime());
+				}
+				if (regForm.getPassportNumber() != null) {
+					user.setPassportNumber(regForm.getPassportNumber());
+				}
+				if (regForm.getPassword() != null) {
+					user.setPassword(encoder.encode(regForm.getPassword()));
+				}
+				userRepo.saveAndFlush(user);
 				
+				return new ResponseEntity<>(HttpStatus.ACCEPTED);
+				
+			}else {
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 			}
-			if (regForm.getIme() != null) {
-				user.setIme(regForm.getIme());
-			}
-			if (regForm.getPrezime() != null) {
-				user.setPrezime(regForm.getPrezime());
-			}
-			if (regForm.getPassportNumber() != null) {
-				user.setPassportNumber(regForm.getPassportNumber());
-			}
-			if (regForm.getPassword() != null) {
-				user.setPassword(encoder.encode(regForm.getPassword()));
-			}
-			userRepo.saveAndFlush(user);
-			
-			return new ResponseEntity<>(HttpStatus.ACCEPTED);
-			
-		}else {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		
 	}

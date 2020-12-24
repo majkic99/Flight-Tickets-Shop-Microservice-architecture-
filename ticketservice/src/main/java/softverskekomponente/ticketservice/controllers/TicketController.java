@@ -68,6 +68,21 @@ public class TicketController {
 		
 	}
 	
+	@GetMapping("/myTickets")
+	public ResponseEntity<List<Ticket>> mySortedTickets(@RequestHeader(value = "Authorization") String token){
+		try {
+			ResponseEntity<Integer> responseUserID = UtilsMethods
+					.sendGet("http://localhost:8762/userservice/findUserID/", token);
+			
+			List<Ticket> response = ticketRepository.findMineSorted(responseUserID.getBody());
+			return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		
+	}
+	
 	
 	@PostMapping("/buyTicket")
 	public ResponseEntity<Object> buyTicket(@RequestBody BuyTicketForm buyTicketForm,

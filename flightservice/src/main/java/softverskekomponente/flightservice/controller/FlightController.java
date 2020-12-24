@@ -3,6 +3,9 @@ package softverskekomponente.flightservice.controller;
 import javax.jms.Queue;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jms.core.JmsTemplate;
@@ -15,12 +18,15 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sipios.springsearch.anotation.SearchSpec;
+
 import softverskekomponente.flightservice.entities.Airplane;
 import softverskekomponente.flightservice.entities.Flight;
 import softverskekomponente.flightservice.forms.NewAirplaneForm;
 import softverskekomponente.flightservice.forms.NewFlightForm;
 import softverskekomponente.flightservice.repositories.AirplaneRepository;
 import softverskekomponente.flightservice.repositories.FlightRepository;
+import softverskekomponente.flightservice.repositories.FlightSearchRepository;
 import softverskekomponente.flightservice.utils.UtilsMethods;
 
 import static softverskekomponente.flightservice.security.SecurityConstants.*;
@@ -38,6 +44,8 @@ public class FlightController {
 	
 	private FlightRepository flightRepo;
 	
+	private FlightSearchRepository flightSearchRepo;
+	
 	@Autowired
 	JmsTemplate jmsTemplate;
 	
@@ -48,10 +56,11 @@ public class FlightController {
 	Queue canceledFlightsQueueTickets;
 	
 	@Autowired
-	public FlightController(AirplaneRepository airplaneRepo, FlightRepository flightRepo) {
+	public FlightController(AirplaneRepository airplaneRepo, FlightRepository flightRepo,FlightSearchRepository flightSearchRepo) {
 		super();
 		this.airplaneRepo = airplaneRepo;
 		this.flightRepo = flightRepo;
+		this.flightSearchRepo = flightSearchRepo;
 	}
 	
 	
@@ -196,13 +205,13 @@ public class FlightController {
 			List<Flight> list = flightRepo.findAll();
 			List<Flight> response = new ArrayList<>();
 			for (Flight flight : list) {
-				/*
-				ResponseEntity<Integer> filledNumber = UtilsMethods.sendGetInteger("http://localhost:8762/ticketservice/TakenSeats/"+flight.getId() );
-				if (filledNumber.getBody() < flight.getAirplane().getCapacity()) {
+				
+				ResponseEntity<Integer> filledNumber = UtilsMethods.sendGetInteger("http://localhost:8762/ticketsservice/TakenSeats/"+flight.getId() );
+				if (filledNumber.getBody() < flight.getAirplane().getCapacity() && (!flight.isCanceled())) {
 					response.add(flight);
 				}
-				*/
-				response.add(flight);
+				
+				
 			}
 			
 			
@@ -212,5 +221,35 @@ public class FlightController {
 		}
 		
 	}
+	
+	@GetMapping("flights/{page}/{perPage}")
+	public ResponseEntity<List<Flight>> paginatedFlights(@PathVariable int page, @PathVariable int perPage){
+		try {
+			Pageable pagingrequest = PageRequest.of(page, perPage);
+			List<Flight> list = flightRepo.findAllNotCanceled(pagingrequest);
+			
+			List<Flight> response = new ArrayList<>();
+			for (Flight flight : list) {
+				
+				ResponseEntity<Integer> filledNumber = UtilsMethods.sendGetInteger("http://localhost:8762/ticketsservice/TakenSeats/"+flight.getId() );
+				if (filledNumber.getBody() < flight.getAirplane().getCapacity()) {
+					response.add(flight);
+				}
+				
+			}
+			
+			return new ResponseEntity<>(response , HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		
+	}
+	
+	@GetMapping("/flight-search")
+	public ResponseEntity<List<Flight>> searchForFlights(@SearchSpec Specification<Flight> specs){
+		return new ResponseEntity<>(flightSearchRepo.findAll(Specification.where(specs)), HttpStatus.ACCEPTED);
+	}
+	
 	
 }
