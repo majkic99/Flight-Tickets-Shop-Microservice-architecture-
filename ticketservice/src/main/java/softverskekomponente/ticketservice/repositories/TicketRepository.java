@@ -20,5 +20,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer>{
 	@Query("select count(t) from Ticket t where t.idFlight = :idFlight")
 	int numberOfTakenPlaces(int idFlight);
 
+	@Query("select t from Ticket t where t.idUser = :userID order by t.date")
+	List<Ticket> findMineSorted(int userID);
 	
 }

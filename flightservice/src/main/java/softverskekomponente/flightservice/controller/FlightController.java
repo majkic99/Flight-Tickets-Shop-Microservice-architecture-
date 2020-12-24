@@ -196,13 +196,13 @@ public class FlightController {
 			List<Flight> list = flightRepo.findAll();
 			List<Flight> response = new ArrayList<>();
 			for (Flight flight : list) {
-				/*
-				ResponseEntity<Integer> filledNumber = UtilsMethods.sendGetInteger("http://localhost:8762/ticketservice/TakenSeats/"+flight.getId() );
-				if (filledNumber.getBody() < flight.getAirplane().getCapacity()) {
+				
+				ResponseEntity<Integer> filledNumber = UtilsMethods.sendGetInteger("http://localhost:8762/ticketsservice/TakenSeats/"+flight.getId() );
+				if (filledNumber.getBody() < flight.getAirplane().getCapacity() && (!flight.isCanceled())) {
 					response.add(flight);
 				}
-				*/
-				response.add(flight);
+				
+				
 			}
 			
 			
