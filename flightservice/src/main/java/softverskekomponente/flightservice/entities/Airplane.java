@@ -9,7 +9,7 @@ import javax.persistence.Id;
 public class Airplane {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private int id;
 	private String name;
 	private int capacity;
 	public Airplane() {
@@ -32,6 +32,12 @@ public class Airplane {
 	}
 	public void setCapacity(int capacity) {
 		this.capacity = capacity;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	

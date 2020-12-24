@@ -42,22 +42,19 @@ public class Consumer {
         message.setText("Otvorili ste novi nalog na sajtu sa ovom email adresom. SPORTSKI POZDRAV!");
         this.getJavaMailSender().send(message);
         
-		/*
-		System.out.println("Starting Sending Email to: " + email);
-
-		Random rand = new Random();
-
-		for (int i = 0; i < rand.nextInt(10); i++) {
-			try {
-				Thread.sleep(1000);
-				System.out.println("sending..");
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-
-		System.out.println("Email successfully sent to: " + email);
-		*/
+		
+	}
+	
+	@JmsListener(destination = "DeletedFlightEmail.queue")
+	public void sendDeletedFlightNotification( String email) {
+		SimpleMailMessage message = new SimpleMailMessage(); 
+        message.setFrom("softverskekomponente@gmail.com");
+        message.setTo(email); 
+        message.setSubject("Vas let je otkazan"); 
+        message.setText("Nazalost vas let je otkazan. Pare su vam vracene! Vise detalja nadjite u aplikaciji");
+        this.getJavaMailSender().send(message);
+        
+		
 	}
 	
 	@JmsListener(destination = "AccountChanged.queue")
@@ -69,21 +66,6 @@ public class Consumer {
         message.setSubject("Promenjen Nalog na sajtu"); 
         message.setText("Promenili ste email na ovaj novi na sajtu SOFT KOMP. SPORTSKI POZDRAV!");
         this.getJavaMailSender().send(message);
-		/*
-		System.out.println("Starting Sending Changed Email to: " + email);
-
-		Random rand = new Random();
-
-		for (int i = 0; i < rand.nextInt(10); i++) {
-			try {
-				Thread.sleep(1000);
-				System.out.println("sending..");
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-
-		System.out.println("Email successfully sent to: " + email);
-		*/
+		
 	}
 }

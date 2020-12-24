@@ -12,18 +12,19 @@ public class Ticket {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long idTicket;
+	private int idTicket;
 
-	private long idUser;
-	private long idFlight;
+	private int idUser;
+	private int idFlight;
 	private long paidFor;
+	private String info;
 
 	private Date date;
 
 	public Ticket() {
 	}
 
-	public Ticket(long idUser, long idFlight, long paidFor, Date date) {
+	public Ticket(int idUser, int idFlight, long paidFor, Date date) {
 		
 		super();
 		this.idUser = idUser;
@@ -33,27 +34,27 @@ public class Ticket {
 		
 	}
 
-	public long getIdTicket() {
+	public int getIdTicket() {
 		return idTicket;
 	}
 
-	public void setIdTicket(long idTicket) {
+	public void setIdTicket(int idTicket) {
 		this.idTicket = idTicket;
 	}
 
-	public long getIdUser() {
+	public int getIdUser() {
 		return idUser;
 	}
 
-	public void setIdUser(long idUser) {
+	public void setIdUser(int idUser) {
 		this.idUser = idUser;
 	}
 
-	public long getIdFlight() {
+	public int getIdFlight() {
 		return idFlight;
 	}
 
-	public void setIdFlight(long idFlight) {
+	public void setIdFlight(int idFlight) {
 		this.idFlight = idFlight;
 	}
 
@@ -71,6 +72,14 @@ public class Ticket {
 
 	public void setPaidFor(long paidFor) {
 		this.paidFor = paidFor;
+	}
+
+	public String getInfo() {
+		return info;
+	}
+
+	public void setInfo(String info) {
+		this.info = info;
 	}
 
 	

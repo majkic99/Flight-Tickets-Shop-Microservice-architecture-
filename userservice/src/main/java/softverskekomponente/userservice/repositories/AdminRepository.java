@@ -8,7 +8,7 @@ import softverskekomponente.userservice.entities.User;
 
 
 @Repository
-public interface AdminRepository extends JpaRepository<Admin, Long>{
+public interface AdminRepository extends JpaRepository<Admin, Integer>{
 	Admin findByEmail(String email);
 
 	boolean existsByEmail(String email);

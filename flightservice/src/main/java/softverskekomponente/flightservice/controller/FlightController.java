@@ -25,13 +25,14 @@ import softverskekomponente.flightservice.utils.UtilsMethods;
 
 import static softverskekomponente.flightservice.security.SecurityConstants.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("")
-public class AdminController {
+public class FlightController {
 	
 	private AirplaneRepository airplaneRepo;
 	
@@ -41,10 +42,13 @@ public class AdminController {
 	JmsTemplate jmsTemplate;
 	
 	@Autowired
-	Queue canceledFlightsQueue;
+	Queue canceledFlightsQueueUsers;
 	
 	@Autowired
-	public AdminController(AirplaneRepository airplaneRepo, FlightRepository flightRepo) {
+	Queue canceledFlightsQueueTickets;
+	
+	@Autowired
+	public FlightController(AirplaneRepository airplaneRepo, FlightRepository flightRepo) {
 		super();
 		this.airplaneRepo = airplaneRepo;
 		this.flightRepo = flightRepo;
@@ -52,7 +56,7 @@ public class AdminController {
 	
 	
 	@GetMapping("/findKilometers/{x}")
-	public ResponseEntity<Integer> findKilometersByFlightID(@PathVariable long x){
+	public ResponseEntity<Integer> findKilometersByFlightID(@PathVariable int x){
 		try {
 			Optional<Flight> flight = flightRepo.findById(x);
 			if (flight.isPresent()) {
@@ -68,7 +72,7 @@ public class AdminController {
 	}
 	
 	@GetMapping("/findPrice/{x}")
-	public ResponseEntity<Integer> findPriceByFlightID(@PathVariable long x){
+	public ResponseEntity<Integer> findPriceByFlightID(@PathVariable int x){
 		try {
 			Optional<Flight> flight = flightRepo.findById(x);
 			if (flight.isPresent()) {
@@ -84,7 +88,7 @@ public class AdminController {
 	}
 	
 	@GetMapping("/findCapacity/{x}")
-	public ResponseEntity<Integer> findCapacityByFlightID(@PathVariable long x){
+	public ResponseEntity<Integer> findCapacityByFlightID(@PathVariable int x){
 		try {
 			Optional<Flight> flight = flightRepo.findById(x);
 			if (flight.isPresent()) {
@@ -115,7 +119,7 @@ public class AdminController {
 	}
 	
 	@GetMapping("deleteAirplane/{x}")
-	public ResponseEntity<String> deleteAirplane(@PathVariable long x,@RequestHeader(value = HEADER_STRING) String token){
+	public ResponseEntity<String> deleteAirplane(@PathVariable int x,@RequestHeader(value = HEADER_STRING) String token){
 		
 		ResponseEntity<String> isAdmin = UtilsMethods.sendGetString("http://localhost:8762/userservice/isAdmin", token);
 		
@@ -160,11 +164,48 @@ public class AdminController {
 		
 	}
 	
+	@GetMapping("deleteFlight/{x}")
+	public ResponseEntity<String> deleteFlight(@PathVariable int x,@RequestHeader(value = HEADER_STRING) String token){
+		
+		ResponseEntity<String> isAdmin = UtilsMethods.sendGetString("http://localhost:8762/userservice/isAdmin", token);
+		
+		if (isAdmin.getBody().equals("YES ADMIN")) {
+			Optional<Flight> flightOptinal = flightRepo.findById(x);
+			
+			if (flightOptinal.isPresent()) {
+				Flight flight = flightOptinal.get();
+				jmsTemplate.convertAndSend(canceledFlightsQueueUsers, String.valueOf(flight.getId()));
+				jmsTemplate.convertAndSend(canceledFlightsQueueTickets, String.valueOf(flight.getId()));
+				flight.setCanceled(true);
+				flightRepo.save(flight);
+				return new ResponseEntity<>("DELETED AIRPLANE" , HttpStatus.ACCEPTED);
+			}
+			
+			
+			
+			return new ResponseEntity<>("FLIGHT NOT FOUND", HttpStatus.BAD_REQUEST);
+		}else {
+			return new ResponseEntity<>("NO ADMIN ACCESS", HttpStatus.FORBIDDEN);
+		}
+	}
+	
 	@GetMapping("flights")
 	public ResponseEntity<List<Flight>> allFlights(){
 		
 		try {
-			List<Flight> response = flightRepo.findAll();
+			List<Flight> list = flightRepo.findAll();
+			List<Flight> response = new ArrayList<>();
+			for (Flight flight : list) {
+				/*
+				ResponseEntity<Integer> filledNumber = UtilsMethods.sendGetInteger("http://localhost:8762/ticketservice/TakenSeats/"+flight.getId() );
+				if (filledNumber.getBody() < flight.getAirplane().getCapacity()) {
+					response.add(flight);
+				}
+				*/
+				response.add(flight);
+			}
+			
+			
 			return new ResponseEntity<>(response , HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

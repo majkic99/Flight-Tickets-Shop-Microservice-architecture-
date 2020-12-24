@@ -56,6 +56,9 @@ public class Controller {
 	
 	@Autowired
 	Queue changedAccountEmailQueue;
+	
+	@Autowired
+	Queue deletedFlightEmailQueue;
 
 	@Autowired
 	public Controller(BCryptPasswordEncoder encoder, UserRepository userRepo, CreditCardsRepository ccRepo, AdminRepository adminRepo) {
@@ -77,7 +80,7 @@ public class Controller {
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 	
-	@GetMapping("/addMilesToUser/{x}")
+	@GetMapping("/addKMToUser/{x}")
 	public ResponseEntity<Integer> addMilesToUser(@PathVariable int x , @RequestHeader(value = HEADER_STRING) String token){
 		String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
 				.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
@@ -175,7 +178,7 @@ public class Controller {
 
 			// cuvamo u nasoj bazi ovaj entitet
 			userRepo.saveAndFlush(user);
-			//TODO SEND EMAIL
+			
 			jmsTemplate.convertAndSend(newAccountEmailQueue,registrationForm.getEmail());
 			return new ResponseEntity<>("Succesfully registered user - ID:" + user.getId(), HttpStatus.ACCEPTED);
 		} catch (Exception e) {

@@ -9,9 +9,9 @@ import softverskekomponente.userservice.entities.CreditCard;
 
 
 @Repository
-public interface CreditCardsRepository extends JpaRepository<CreditCard, Long> {
+public interface CreditCardsRepository extends JpaRepository<CreditCard, Integer> {
 
 	@Query("select c from CreditCard c where c.user.id = :userID")
-	List<CreditCard> getCreditCardsByUserID(long userID);
+	List<CreditCard> getCreditCardsByUserID(int userID);
 	
 }

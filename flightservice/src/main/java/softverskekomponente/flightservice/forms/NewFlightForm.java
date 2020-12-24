@@ -6,13 +6,13 @@ import softverskekomponente.flightservice.entities.Airplane;
 
 public class NewFlightForm {
 	
-	private long airplaneID;
+	private int airplaneID;
 	private String start;
 	private String end;
 	private int lengthinKM;
 	private int price;
 	
-	public NewFlightForm(long airplaneID, String start, String end, int lengthinKM, int price) {
+	public NewFlightForm(int airplaneID, String start, String end, int lengthinKM, int price) {
 		super();
 		this.airplaneID = airplaneID;
 		this.start = start;
@@ -21,11 +21,11 @@ public class NewFlightForm {
 		this.price = price;
 	}
 	
-	public long getAirplaneID() {
+	public int getAirplaneID() {
 		return airplaneID;
 	}
 
-	public void setAirplaneID(long airplaneID) {
+	public void setAirplaneID(int airplaneID) {
 		this.airplaneID = airplaneID;
 	}
 

@@ -26,6 +26,10 @@ public class Config {
 		return new ActiveMQQueue("AccountChanged.queue");
 	}
 	
+	@Bean
+	public Queue deletedFlightEmailQueue() {
+		return new ActiveMQQueue("DeletedFlightEmail.queue");
+	}
 	
 
 	@Bean

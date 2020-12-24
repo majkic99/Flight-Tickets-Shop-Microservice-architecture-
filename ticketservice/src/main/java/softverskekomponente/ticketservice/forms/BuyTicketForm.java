@@ -4,11 +4,11 @@ import java.util.Date;
 
 public class BuyTicketForm {
 
-	private long idFlight;
-	private long idCard;
+	private int idFlight;
+	private int idCard;
 	
 
-	public BuyTicketForm(long idFlight, long idCard, Date date) {
+	public BuyTicketForm(int idFlight, int idCard, Date date) {
 
 		this.idFlight = idFlight;
 		this.idCard = idCard;
@@ -16,19 +16,19 @@ public class BuyTicketForm {
 
 	}
 
-	public long getIdFlight() {
+	public int getIdFlight() {
 		return idFlight;
 	}
 
-	public void setIdFlight(long idFlight) {
+	public void setIdFlight(int idFlight) {
 		this.idFlight = idFlight;
 	}
 
-	public long getIdCard() {
+	public int getIdCard() {
 		return idCard;
 	}
 
-	public void setIdCard(long idCard) {
+	public void setIdCard(int idCard) {
 		this.idCard = idCard;
 	}
 

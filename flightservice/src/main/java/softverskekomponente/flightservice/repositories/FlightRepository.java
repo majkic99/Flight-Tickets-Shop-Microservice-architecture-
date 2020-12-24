@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 import softverskekomponente.flightservice.entities.Flight;
 
 
-public interface FlightRepository extends JpaRepository<Flight, Long> {
+public interface FlightRepository extends JpaRepository<Flight, Integer> {
 
 	@Query("select f from Flight f where f.airplane.id = :airplaneID")
-	boolean existsAirplaneID(long airplaneID);
+	boolean existsAirplaneID(int airplaneID);
 	
 
 }

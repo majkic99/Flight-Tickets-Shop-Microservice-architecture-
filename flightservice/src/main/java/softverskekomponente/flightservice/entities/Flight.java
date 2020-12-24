@@ -11,7 +11,7 @@ public class Flight {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private int id;
 	
 	@ManyToOne
 	private Airplane airplane;
@@ -19,6 +19,8 @@ public class Flight {
 	private String end;
 	private int lengthinKM;
 	private int price;
+	private boolean canceled;
+	
 	
 	public Flight() {
 		
@@ -31,6 +33,7 @@ public class Flight {
 		this.end = end;
 		this.lengthinKM = lengthinKM;
 		this.price = price;
+		this.canceled = false;
 	}
 
 	public Airplane getAirplane() {
@@ -65,11 +68,11 @@ public class Flight {
 		this.lengthinKM = lengthinKM;
 	}
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -81,6 +84,17 @@ public class Flight {
 		this.price = price;
 	}
 
+	public boolean isCanceled() {
+		return canceled;
+	}
+
+	public void setCanceled(boolean canceled) {
+		this.canceled = canceled;
+	}
+
+	
+	
+	
 	
 	
 }

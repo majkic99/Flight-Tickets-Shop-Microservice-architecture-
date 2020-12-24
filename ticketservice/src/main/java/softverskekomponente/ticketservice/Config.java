@@ -14,8 +14,6 @@ public class Config {
 	@Value("${activemq.broker-url}")
 	public String brokerUrl;
 
-	
-	
 
 	@Bean
 	public ActiveMQConnectionFactory activeMQConnectionFactory() {

@@ -15,8 +15,13 @@ public class Config {
 	public String brokerUrl;
 
 	@Bean
-	public Queue canceledFlightsQueue() {
-		return new ActiveMQQueue("CanceledFlights.queue");
+	public Queue canceledFlightsQueueUsers() {
+		return new ActiveMQQueue("CanceledFlightsUsers.queue");
+	}
+	
+	@Bean
+	public Queue canceledFlightsQueueTickets() {
+		return new ActiveMQQueue("CanceledFlightsTickets.queue");
 	}
 	
 	

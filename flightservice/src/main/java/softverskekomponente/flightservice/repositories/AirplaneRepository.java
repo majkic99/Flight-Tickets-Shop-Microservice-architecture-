@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import softverskekomponente.flightservice.entities.Airplane;
 
 
-public interface AirplaneRepository extends JpaRepository<Airplane, Long> {
+public interface AirplaneRepository extends JpaRepository<Airplane, Integer> {
 
 }
