@@ -1,7 +1,5 @@
 package softverskekomponente.userservice.controller;
 
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +33,6 @@ import java.util.List;
 
 import javax.jms.Queue;
 
-
 @RestController
 @RequestMapping("")
 public class Controller {
@@ -44,31 +41,32 @@ public class Controller {
 	private UserRepository userRepo;
 	private CreditCardsRepository ccRepo;
 	private AdminRepository adminRepo;
-	
+
 	@Autowired
 	JmsTemplate jmsTemplate;
 
 	@Autowired
 	Queue newAccountEmailQueue;
-	
+
 	@Autowired
 	Queue changedAccountEmailQueue;
-	
+
 	@Autowired
 	Queue deletedFlightEmailQueue;
 
 	@Autowired
-	public Controller(BCryptPasswordEncoder encoder, UserRepository userRepo, CreditCardsRepository ccRepo, AdminRepository adminRepo) {
+	public Controller(BCryptPasswordEncoder encoder, UserRepository userRepo, CreditCardsRepository ccRepo,
+			AdminRepository adminRepo) {
 		this.encoder = encoder;
 		this.userRepo = userRepo;
 		this.ccRepo = ccRepo;
 		this.adminRepo = adminRepo;
 	}
-	
+
 	@GetMapping("findUserID")
-	public ResponseEntity<Integer> findUserID(@RequestHeader(value = HEADER_STRING) String token){
-		String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
-				.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
+	public ResponseEntity<Integer> findUserID(@RequestHeader(value = HEADER_STRING) String token) {
+		String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build().verify(token.replace(TOKEN_PREFIX, ""))
+				.getSubject();
 		User user = userRepo.findByEmail(email);
 		if (user != null) {
 			Integer response = (int) user.getId();
@@ -76,9 +74,10 @@ public class Controller {
 		}
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@GetMapping("/addKMToUser/{x}")
-	public ResponseEntity<Integer> addMilesToUser(@PathVariable int x , @RequestHeader(value = HEADER_STRING) String token){
+	public ResponseEntity<Integer> addMilesToUser(@PathVariable int x,
+			@RequestHeader(value = HEADER_STRING) String token) {
 		synchronized (this) {
 			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
 					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
@@ -90,53 +89,53 @@ public class Controller {
 			}
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
-			
+
 	}
-	
-	
+
 	@GetMapping("/benefitlevel")
-	public ResponseEntity<String> getBenefitLevel(@RequestHeader(value = HEADER_STRING) String token){
-		String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
-				.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
+	public ResponseEntity<String> getBenefitLevel(@RequestHeader(value = HEADER_STRING) String token) {
+		String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build().verify(token.replace(TOKEN_PREFIX, ""))
+				.getSubject();
 		User user = userRepo.findByEmail(email);
 		if (user != null) {
 			switch (user.getRank()) {
 			case GOLD:
 				return new ResponseEntity<>("Gold", HttpStatus.ACCEPTED);
-				
+
 			case SILVER:
 				return new ResponseEntity<>("Silver", HttpStatus.ACCEPTED);
-				
+
 			case BRONZE:
 				return new ResponseEntity<>("Bronze", HttpStatus.ACCEPTED);
-				
+
 			}
-		}else {
+		} else {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@GetMapping("/creditcards")
-	public ResponseEntity<List<CreditCardFormOutput>> usersCreditCards(@RequestHeader(value = HEADER_STRING) String token){
+	public ResponseEntity<List<CreditCardFormOutput>> usersCreditCards(
+			@RequestHeader(value = HEADER_STRING) String token) {
 		try {
-			
+
 			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
 					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
 			User user = userRepo.findByEmail(email);
 			if (user != null) {
-				
+
 				List<CreditCard> lista = ccRepo.getCreditCardsByUserID(user.getId());
 				List<CreditCardFormOutput> response = new ArrayList<>();
 				for (CreditCard cc : lista) {
-					CreditCardFormOutput ccform = new CreditCardFormOutput(cc.getName(), cc.getSurname(), cc.getCardNumber());
+					CreditCardFormOutput ccform = new CreditCardFormOutput(cc.getName(), cc.getSurname(),
+							cc.getCardNumber());
 					response.add(ccform);
 				}
-				
+
 				return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
-			}else {
-				return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+			} else {
+				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 			}
 		} catch (Exception e) {
 			System.out.println("exception");
@@ -144,26 +143,25 @@ public class Controller {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	
-	
+
 	@GetMapping("/isAdmin")
-	public ResponseEntity<String> checkIfAdmin(@RequestHeader(value = HEADER_STRING) String token){
+	public ResponseEntity<String> checkIfAdmin(@RequestHeader(value = HEADER_STRING) String token) {
 		try {
 			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
 					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
-			
+
 			if (adminRepo.existsByEmail(email)) {
 				return new ResponseEntity<>("YES ADMIN", HttpStatus.ACCEPTED);
-			}else {
-				return new ResponseEntity<>("NO ADMIN", HttpStatus.FORBIDDEN);
+			} else {
+				return new ResponseEntity<>("NO ADMIN", HttpStatus.ACCEPTED);
 			}
 		} catch (Exception e) {
-			
+
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
+
 	}
-	
+
 	@PostMapping("/register")
 	public ResponseEntity<String> register(@RequestBody RegistrationForm registrationForm) {
 
@@ -172,18 +170,19 @@ public class Controller {
 				if (userRepo.existsByEmail(registrationForm.getEmail())) {
 					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 				}
-				
+
 				// iscitavamo entitet iz registracione forme
-				User user = new User(registrationForm.getIme(), registrationForm.getPrezime(), registrationForm.getEmail(),
-						encoder.encode(registrationForm.getPassword()), registrationForm.getPassportNumber());
+				User user = new User(registrationForm.getIme(), registrationForm.getPrezime(),
+						registrationForm.getEmail(), encoder.encode(registrationForm.getPassword()),
+						registrationForm.getPassportNumber());
 
 				// cuvamo u nasoj bazi ovaj entitet
 				userRepo.saveAndFlush(user);
-				
-				jmsTemplate.convertAndSend(newAccountEmailQueue,registrationForm.getEmail());
+
+				jmsTemplate.convertAndSend(newAccountEmailQueue, registrationForm.getEmail());
 				return new ResponseEntity<>("Succesfully registered user - ID:" + user.getId(), HttpStatus.ACCEPTED);
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -207,9 +206,10 @@ public class Controller {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@PostMapping("/addcc")
-	public ResponseEntity<String> addCreditCard(@RequestBody CreditCardForm ccForm, @RequestHeader(value = HEADER_STRING) String token ){
+	public ResponseEntity<String> addCreditCard(@RequestBody CreditCardForm ccForm,
+			@RequestHeader(value = HEADER_STRING) String token) {
 		try {
 			synchronized (token) {
 				String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
@@ -217,25 +217,27 @@ public class Controller {
 
 				User user = userRepo.findByEmail(email);
 				if (user != null) {
-					CreditCard cc = new CreditCard(user, ccForm.getName(), ccForm.getSurname(), ccForm.getCardNumber(), ccForm.getCvcNumber());
+					CreditCard cc = new CreditCard(user, ccForm.getName(), ccForm.getSurname(), ccForm.getCardNumber(),
+							ccForm.getCvcNumber());
 					ccRepo.saveAndFlush(cc);
 					return new ResponseEntity<>(HttpStatus.ACCEPTED);
-					
-				}else {
+
+				} else {
 					return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 				}
 			}
-			
+
 		} catch (Exception e) {
 			// TODO: handle exception
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-			
+
 	}
-	
+
 	@PutMapping("/updateUser")
-	public ResponseEntity<String> updateUser(@RequestBody RegistrationForm regForm, @RequestHeader(value = HEADER_STRING) String token){
-		
+	public ResponseEntity<String> updateUser(@RequestBody RegistrationForm regForm,
+			@RequestHeader(value = HEADER_STRING) String token) {
+
 		synchronized (this) {
 			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
 					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
@@ -244,8 +246,8 @@ public class Controller {
 			if (user != null) {
 				if (regForm.getEmail() != null) {
 					user.setEmail(regForm.getEmail());
-					jmsTemplate.convertAndSend(changedAccountEmailQueue,regForm.getEmail());
-					
+					jmsTemplate.convertAndSend(changedAccountEmailQueue, regForm.getEmail());
+
 				}
 				if (regForm.getIme() != null) {
 					user.setIme(regForm.getIme());
@@ -260,17 +262,14 @@ public class Controller {
 					user.setPassword(encoder.encode(regForm.getPassword()));
 				}
 				userRepo.saveAndFlush(user);
-				
+
 				return new ResponseEntity<>(HttpStatus.ACCEPTED);
-				
-			}else {
+
+			} else {
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 			}
 		}
-		
-	}
-	
-	
-	
-}
 
+	}
+
+}

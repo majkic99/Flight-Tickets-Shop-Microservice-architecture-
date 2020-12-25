@@ -1,4 +1,6 @@
-package softverskekomponente.flightservice.forms;
+package flightTicketsShopUI.forms;
+
+
 
 public class NewFlightForm {
 	
