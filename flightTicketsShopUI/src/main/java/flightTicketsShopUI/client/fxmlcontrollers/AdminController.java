@@ -10,10 +10,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
 @Component
-public class UserController {
+public class AdminController {
 
 	@Autowired
-	private MainViewManager mainViewManager;
+	MainViewManager mainViewManager;
 
 	@FXML
 	private Label welcomeLBL;
@@ -23,7 +23,7 @@ public class UserController {
 	@FXML
 	public void initialize() {
 
-		welcomeLBL.setText(welcomeLBL.getText() + HttpUtils.getUSER_NAME());
+		welcomeLBL.setText(welcomeLBL.getText());
 
 		String status = HttpUtils.isIS_ADMIN() ? "ADMIN" : "CUSTOMER";
 
@@ -31,27 +31,15 @@ public class UserController {
 
 	}
 
-	public void handleViewProfile(ActionEvent event) {
+	public void handleEditAirplanes(ActionEvent event) {
 
-		mainViewManager.changeRoot("userViewProfile");
-
-	}
-
-	public void handleEditProfile(ActionEvent event) {
-
-		mainViewManager.changeRoot("userEditProfile");
+		mainViewManager.changeRoot("adminEditAirplanes");
 
 	}
 
-	public void handleViewCreditCards(ActionEvent event) {
+	public void handleEditFlights(ActionEvent event) {
 
-		mainViewManager.changeRoot("userViewCreditCards");
-
-	}
-
-	public void handleExploreFlights(ActionEvent event) {
-
-		mainViewManager.changeRoot("userExploreFlights");
+		mainViewManager.changeRoot("adminEditFlights");
 
 	}
 

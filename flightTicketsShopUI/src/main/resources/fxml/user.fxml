@@ -5,45 +5,53 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="733.0" prefWidth="990.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="flightTicketsShopUI.client.fxmlcontrollers.UserController">
-   <top>
-      <MenuBar BorderPane.alignment="CENTER">
-        <menus>
-            <Menu mnemonicParsing="false" text="Profile">
-              <items>
-                  <MenuItem mnemonicParsing="false" onAction="#handleViewProfile" text="View profile" />
-                <MenuItem mnemonicParsing="false" onAction="#handleEditProfile" text="Edit profile" />
-              </items>
-            </Menu>
-          <Menu mnemonicParsing="false" text="Credit cards">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#HandleAddNewCreditCard" text="Add new credit card" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleViewCreditCards" text="View credit cards" />
-            </items>
-          </Menu>
-            <Menu mnemonicParsing="false" text="Flights">
-              <items>
-                <MenuItem mnemonicParsing="false" onAction="#handleExploreFlights" text="Explore flights" />
-              </items>
-            </Menu>
-        </menus>
-      </MenuBar>
-   </top>
-   <center>
-      <VBox alignment="CENTER">
-         <children>
-            <Label fx:id="welcomeLBL" text="WELCOME " textFill="#2c77d3" BorderPane.alignment="CENTER">
-               <font>
-                  <Font name="Goudy Stout" size="24.0" />
-               </font>
-            </Label>
-            <Label fx:id="statusLBL" layoutX="418.0" layoutY="350.0" text="user Status: " textFill="#2c77d3">
-               <font>
-                  <Font name="Goudy Stout" size="18.0" />
-               </font>
-            </Label>
-         </children>
-      </VBox>
-   </center>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity"
+	minHeight="-Infinity" minWidth="-Infinity" prefHeight="733.0"
+	prefWidth="990.0" xmlns="http://javafx.com/javafx/8"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="flightTicketsShopUI.client.fxmlcontrollers.UserController">
+	<top>
+		<MenuBar BorderPane.alignment="CENTER">
+			<menus>
+				<Menu mnemonicParsing="false" text="Profile">
+					<items>
+						<MenuItem mnemonicParsing="false"
+							onAction="#handleViewProfile" text="View profile" />
+						<MenuItem mnemonicParsing="false"
+							onAction="#handleEditProfile" text="Edit profile" />
+					</items>
+				</Menu>
+				<Menu mnemonicParsing="false" text="Credit cards">
+					<items>
+						<MenuItem mnemonicParsing="false"
+							onAction="#handleViewCreditCards" text="View credit cards" />
+					</items>
+				</Menu>
+				<Menu mnemonicParsing="false" text="Flights">
+					<items>
+						<MenuItem mnemonicParsing="false"
+							onAction="#handleExploreFlights" text="Explore flights" />
+					</items>
+				</Menu>
+			</menus>
+		</MenuBar>
+	</top>
+	<center>
+		<VBox alignment="CENTER">
+			<children>
+				<Label fx:id="welcomeLBL" text="WELCOME " textFill="#2c77d3"
+					BorderPane.alignment="CENTER">
+					<font>
+						<Font name="Goudy Stout" size="24.0" />
+					</font>
+				</Label>
+				<Label fx:id="statusLBL" layoutX="418.0" layoutY="350.0"
+					text="user Status: " textFill="#2c77d3">
+					<font>
+						<Font name="Goudy Stout" size="18.0" />
+					</font>
+				</Label>
+			</children>
+		</VBox>
+	</center>
 </BorderPane>

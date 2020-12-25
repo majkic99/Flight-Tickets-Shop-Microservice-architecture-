@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="733.0" prefWidth="990.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="flightTicketsShopUI.client.fxmlcontrollers.AdminController">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="Airplanes">
+            <items>
+                  <MenuItem mnemonicParsing="false" onAction="#handleEditAirplanes" text="Edit airplanes" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="Flights">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#handleEditFlights" text="Edit flights" />
+              </items>
+            </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <center>
+      <VBox alignment="CENTER">
+         <children>
+            <Label fx:id="welcomeLBL" text="WELCOME " textFill="#d12c2c" BorderPane.alignment="CENTER">
+               <font>
+                  <Font name="Goudy Stout" size="24.0" />
+               </font>
+            </Label>
+            <Label fx:id="statusLBL" layoutX="418.0" layoutY="350.0" text="user Status: " textFill="#d12c2c">
+               <font>
+                  <Font name="Goudy Stout" size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

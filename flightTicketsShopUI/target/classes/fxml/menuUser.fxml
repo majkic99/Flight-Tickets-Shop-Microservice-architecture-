@@ -3,24 +3,29 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 
-<MenuBar xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
-  <menus>
-      <Menu mnemonicParsing="false" text="Profile">
-        <items>
-            <MenuItem mnemonicParsing="false" onAction="#handleViewProfile" text="View profile" />
-          <MenuItem mnemonicParsing="false" onAction="#handleEditProfile" text="Edit profile" />
-        </items>
-      </Menu>
-    <Menu mnemonicParsing="false" text="Credit cards">
-      <items>
-        <MenuItem mnemonicParsing="false" onAction="#HandleAddNewCreditCard" text="Add new credit card" />
-            <MenuItem mnemonicParsing="false" onAction="#handleViewCreditCards" text="View credit cards" />
-      </items>
-    </Menu>
-      <Menu mnemonicParsing="false" text="Flights">
-        <items>
-          <MenuItem mnemonicParsing="false" onAction="#handleExploreFlights" text="Explore flights" />
-        </items>
-      </Menu>
-  </menus>
+<MenuBar xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/8">
+	<menus>
+		<Menu mnemonicParsing="false" text="Profile">
+			<items>
+				<MenuItem mnemonicParsing="false"
+					onAction="#handleViewProfile" text="View profile" />
+				<MenuItem mnemonicParsing="false"
+					onAction="#handleEditProfile" text="Edit profile" />
+			</items>
+		</Menu>
+		<Menu mnemonicParsing="false" text="Credit cards">
+			<items>
+
+				<MenuItem mnemonicParsing="false"
+					onAction="#handleViewCreditCards" text="View credit cards" />
+			</items>
+		</Menu>
+		<Menu mnemonicParsing="false" text="Flights">
+			<items>
+				<MenuItem mnemonicParsing="false"
+					onAction="#handleExploreFlights" text="Explore flights" />
+			</items>
+		</Menu>
+	</menus>
 </MenuBar>

@@ -4,33 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import flightTicketsShopUI.client.MainViewManager;
-import flightTicketsShopUI.utils.HttpUtils;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 
 @Component
-public class UserController {
-
+public class UserEditProfileController {
+	
 	@Autowired
-	private MainViewManager mainViewManager;
-
-	@FXML
-	private Label welcomeLBL;
-	@FXML
-	private Label statusLBL;
-
-	@FXML
-	public void initialize() {
-
-		welcomeLBL.setText(welcomeLBL.getText() + HttpUtils.getUSER_NAME());
-
-		String status = HttpUtils.isIS_ADMIN() ? "ADMIN" : "CUSTOMER";
-
-		statusLBL.setText(statusLBL.getText() + status);
-
-	}
-
+	MainViewManager mainViewManager;
+	
+	
+	
 	public void handleViewProfile(ActionEvent event) {
 
 		mainViewManager.changeRoot("userViewProfile");
