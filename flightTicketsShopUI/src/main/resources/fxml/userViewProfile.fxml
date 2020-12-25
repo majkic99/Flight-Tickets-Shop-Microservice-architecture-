@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
@@ -29,4 +30,40 @@
       	</menus>
       </MenuBar>
    </top>
+   <center>
+      <GridPane BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Name:" />
+            <Label text="Surname:" GridPane.rowIndex="1" />
+            <Label text="Email:" GridPane.rowIndex="2" />
+            <Label text="Traveled in km:" GridPane.rowIndex="3" />
+            <Label text="Passport number:" GridPane.rowIndex="4" />
+            <Label text="User status:" GridPane.rowIndex="5" />
+            <Label fx:id="nameLBL" text="?" GridPane.columnIndex="1" />
+            <Label fx:id="surnameLBL" text="?" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="emailLBL" text="?" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label fx:id="traveledLBL" text="?" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label fx:id="passportLBL" text="?" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label fx:id="userStatusLBL" text="?" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label text="Rank:" GridPane.rowIndex="6" />
+            <Label fx:id="rankLBL" text="?" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+         </children>
+         <BorderPane.margin>
+            <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+         </BorderPane.margin>
+      </GridPane>
+   </center>
 </BorderPane>

@@ -23,6 +23,7 @@ import softverskekomponente.userservice.forms.CreditCardForm;
 import softverskekomponente.userservice.forms.CreditCardFormOutput;
 import softverskekomponente.userservice.forms.RegistrationForm;
 import softverskekomponente.userservice.forms.UserInfoForm;
+import softverskekomponente.userservice.forms.UserViewForm;
 import softverskekomponente.userservice.repositories.AdminRepository;
 import softverskekomponente.userservice.repositories.CreditCardsRepository;
 import softverskekomponente.userservice.repositories.UserRepository;
@@ -201,6 +202,25 @@ public class Controller {
 			User user = userRepo.findByEmail(email);
 
 			return new ResponseEntity<>(new UserInfoForm(user.getIme(), user.getPrezime()), HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@GetMapping("/whoAmIAll")
+	public ResponseEntity<UserViewForm> whoAmIAll(@RequestHeader(value = HEADER_STRING) String token) {
+		try {
+
+			// izvlacimo iz tokena subject koj je postavljen da bude email
+			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
+					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
+
+			User user = userRepo.findByEmail(email);
+
+			return new ResponseEntity<>(new UserViewForm(user.getIme(), user.getPrezime(), user.getEmail(),
+					user.getPassportNumber(), user.getKilometersTraveled(), user.getRank().toString()),
+					HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

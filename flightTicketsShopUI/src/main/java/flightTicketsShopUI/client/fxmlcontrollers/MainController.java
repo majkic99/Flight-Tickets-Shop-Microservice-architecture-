@@ -59,7 +59,8 @@ public class MainController {
 				throw new BlankFieldsException();
 			}
 
-			if (passportTF.getText().equals(repeatPasswordPF.getText())) {
+			
+			if (!passwordPF.getText().equals(repeatPasswordPF.getText())) {
 				throw new PasswordsDoNotMatchException();
 			}
 
