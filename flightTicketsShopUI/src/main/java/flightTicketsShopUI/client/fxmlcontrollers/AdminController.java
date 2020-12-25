@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import flightTicketsShopUI.client.MainViewManager;
+import flightTicketsShopUI.utils.FxmlUtils;
 import flightTicketsShopUI.utils.HttpUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -40,6 +41,12 @@ public class AdminController {
 	public void handleEditFlights(ActionEvent event) {
 
 		mainViewManager.changeRoot("adminEditFlights");
+
+	}
+
+	public void handleLogOut(ActionEvent event) {
+
+		FxmlUtils.logOut(mainViewManager);
 
 	}
 

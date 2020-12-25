@@ -4,16 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import flightTicketsShopUI.client.MainViewManager;
+import flightTicketsShopUI.utils.FxmlUtils;
 import javafx.event.ActionEvent;
 
 @Component
 public class UserEditProfileController {
-	
+
 	@Autowired
 	MainViewManager mainViewManager;
-	
-	
-	
+
 	public void handleViewProfile(ActionEvent event) {
 
 		mainViewManager.changeRoot("userViewProfile");
@@ -38,4 +37,9 @@ public class UserEditProfileController {
 
 	}
 
+	public void handleLogOut(ActionEvent event) {
+
+		FxmlUtils.logOut(mainViewManager);
+
+	}
 }

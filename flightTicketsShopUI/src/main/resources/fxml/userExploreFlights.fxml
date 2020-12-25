@@ -12,6 +12,7 @@
       			<items>
       				<MenuItem mnemonicParsing="false" onAction="#handleViewProfile" text="View profile" />
       				<MenuItem mnemonicParsing="false" onAction="#handleEditProfile" text="Edit profile" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleLogOut" text="Log out" />
       			</items>
       		</Menu>
       		<Menu mnemonicParsing="false" text="Credit cards">

@@ -4,23 +4,22 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-   <top>
-      <MenuBar BorderPane.alignment="CENTER">
-      	<menus>
-      		<Menu mnemonicParsing="false" text="Airplanes">
-      			<items>
-      
-      				<MenuItem mnemonicParsing="false" onAction="#handleEditAirplanes" text="Edit Airplanes" />
-      			</items>
-      		</Menu>
-      		<Menu mnemonicParsing="false" text="Flights">
-      			<items>
-      				<MenuItem mnemonicParsing="false" onAction="#handleEditFlights" text="Edit flights" />
-      			</items>
-      		</Menu>
-      	</menus>
-      </MenuBar>
-   </top>
-</BorderPane>
+<MenuBar xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <menus>
+      <Menu mnemonicParsing="false" text="Airplanes">
+         <items>
+            <MenuItem mnemonicParsing="false" onAction="#handleEditAirplanes" text="Edit Airplanes" />
+         </items>
+      </Menu>
+      <Menu mnemonicParsing="false" text="Flights">
+         <items>
+            <MenuItem mnemonicParsing="false" onAction="#handleEditFlights" text="Edit flights" />
+         </items>
+      </Menu>
+      <Menu mnemonicParsing="false" text="Admin">
+        <items>
+          <MenuItem mnemonicParsing="false" onAction="#handleSignOut" text="Sign out" />
+        </items>
+      </Menu>
+   </menus>
+</MenuBar>

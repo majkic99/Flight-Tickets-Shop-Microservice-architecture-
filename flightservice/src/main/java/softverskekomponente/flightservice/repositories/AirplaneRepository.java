@@ -6,5 +6,7 @@ import softverskekomponente.flightservice.entities.Airplane;
 
 
 public interface AirplaneRepository extends JpaRepository<Airplane, Integer> {
+	
+	
 
 }

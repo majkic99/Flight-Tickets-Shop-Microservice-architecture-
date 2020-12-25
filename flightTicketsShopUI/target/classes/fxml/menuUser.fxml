@@ -3,28 +3,24 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 
-<MenuBar xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/8">
+<MenuBar xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<menus>
 		<Menu mnemonicParsing="false" text="Profile">
 			<items>
-				<MenuItem mnemonicParsing="false"
-					onAction="#handleViewProfile" text="View profile" />
-				<MenuItem mnemonicParsing="false"
-					onAction="#handleEditProfile" text="Edit profile" />
+				<MenuItem mnemonicParsing="false" onAction="#handleViewProfile" text="View profile" />
+				<MenuItem mnemonicParsing="false" onAction="#handleEditProfile" text="Edit profile" />
+            <MenuItem mnemonicParsing="false" onAction="#handleLogOut" text="Log out" />
 			</items>
 		</Menu>
 		<Menu mnemonicParsing="false" text="Credit cards">
 			<items>
 
-				<MenuItem mnemonicParsing="false"
-					onAction="#handleViewCreditCards" text="View credit cards" />
+				<MenuItem mnemonicParsing="false" onAction="#handleViewCreditCards" text="View credit cards" />
 			</items>
 		</Menu>
 		<Menu mnemonicParsing="false" text="Flights">
 			<items>
-				<MenuItem mnemonicParsing="false"
-					onAction="#handleExploreFlights" text="Explore flights" />
+				<MenuItem mnemonicParsing="false" onAction="#handleExploreFlights" text="Explore flights" />
 			</items>
 		</Menu>
 	</menus>
