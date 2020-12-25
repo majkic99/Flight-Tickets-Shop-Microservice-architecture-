@@ -21,12 +21,14 @@ import softverskekomponente.userservice.entities.CreditCard;
 import softverskekomponente.userservice.entities.User;
 import softverskekomponente.userservice.forms.CreditCardForm;
 import softverskekomponente.userservice.forms.CreditCardFormOutput;
+import softverskekomponente.userservice.forms.CreditCardFormWithID;
 import softverskekomponente.userservice.forms.RegistrationForm;
 import softverskekomponente.userservice.forms.UserInfoForm;
 import softverskekomponente.userservice.forms.UserViewForm;
 import softverskekomponente.userservice.repositories.AdminRepository;
 import softverskekomponente.userservice.repositories.CreditCardsRepository;
 import softverskekomponente.userservice.repositories.UserRepository;
+
 import static softverskekomponente.userservice.security.SecurityConstants.*;
 
 import java.util.ArrayList;
@@ -145,6 +147,34 @@ public class Controller {
 		}
 	}
 
+	@GetMapping("/creditcardsWithCVC")
+	public ResponseEntity<List<CreditCardFormWithID>> usersCreditCardsWithCVC(
+			@RequestHeader(value = HEADER_STRING) String token) {
+		try {
+
+			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
+					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
+			User user = userRepo.findByEmail(email);
+			if (user != null) {
+
+				List<CreditCard> lista = ccRepo.getCreditCardsByUserID(user.getId());
+				List<CreditCardFormWithID> response = new ArrayList<>();
+				for (CreditCard cc : lista) {
+					CreditCardFormWithID ccform = new CreditCardFormWithID(cc.getId(),cc.getName(), cc.getSurname(), cc.getCardNumber(),
+							cc.getCvcNumber());
+					response.add(ccform);
+				}
+
+				return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+			} else {
+				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+
 	@GetMapping("/isAdmin")
 	public ResponseEntity<String> checkIfAdmin(@RequestHeader(value = HEADER_STRING) String token) {
 		try {
@@ -228,7 +258,7 @@ public class Controller {
 	}
 
 	@PostMapping("/addcc")
-	public ResponseEntity<String> addCreditCard(@RequestBody CreditCardForm ccForm,
+	public ResponseEntity<Integer> addCreditCard(@RequestBody CreditCardForm ccForm,
 			@RequestHeader(value = HEADER_STRING) String token) {
 		try {
 			synchronized (token) {
@@ -240,7 +270,7 @@ public class Controller {
 					CreditCard cc = new CreditCard(user, ccForm.getName(), ccForm.getSurname(), ccForm.getCardNumber(),
 							ccForm.getCvcNumber());
 					ccRepo.saveAndFlush(cc);
-					return new ResponseEntity<>(HttpStatus.ACCEPTED);
+					return new ResponseEntity<>(cc.getId() ,HttpStatus.ACCEPTED);
 
 				} else {
 					return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -248,9 +278,18 @@ public class Controller {
 			}
 
 		} catch (Exception e) {
-			// TODO: handle exception
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
+
+	}
+
+	@GetMapping("deletecc/{x}")
+	public ResponseEntity<String> deleteCreditCard(@PathVariable int x,
+			@RequestHeader(value = HEADER_STRING) String token) {
+
+		ccRepo.deleteById(x);
+
+		return new ResponseEntity<>("DELETED CREDIT CARD", HttpStatus.ACCEPTED);
 
 	}
 

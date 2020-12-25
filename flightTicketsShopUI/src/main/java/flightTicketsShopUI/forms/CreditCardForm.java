@@ -1,11 +1,17 @@
 package flightTicketsShopUI.forms;
 
 public class CreditCardForm {
+	
+	private int id;
 
 	private String name;
 	private String surname;
 	private String cardNumber;
 	private int cvcNumber;
+	
+	public CreditCardForm() {
+	}
+	
 	public CreditCardForm(String name, String surname, String cardNumber, int cvcNumber) {
 		super();
 		this.name = name;
@@ -36,6 +42,12 @@ public class CreditCardForm {
 	}
 	public void setCvcNumber(int cvcNumber) {
 		this.cvcNumber = cvcNumber;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	

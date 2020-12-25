@@ -1,32 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.control.cell.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="flightTicketsShopUI.client.fxmlcontrollers.UserViewCreditCardsController">
-   <top>
-      <MenuBar BorderPane.alignment="CENTER">
-      	<menus>
-      		<Menu mnemonicParsing="false" text="Profile">
-      			<items>
-      				<MenuItem mnemonicParsing="false" onAction="#handleViewProfile" text="View profile" />
-      				<MenuItem mnemonicParsing="false" onAction="#handleEditProfile" text="Edit profile" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleLogOut" text="Log out" />
-      			</items>
-      		</Menu>
-      		<Menu mnemonicParsing="false" text="Credit cards">
-      			<items>
-      
-      				<MenuItem mnemonicParsing="false" onAction="#handleViewCreditCards" text="View credit cards" />
-      			</items>
-      		</Menu>
-      		<Menu mnemonicParsing="false" text="Flights">
-      			<items>
-      				<MenuItem mnemonicParsing="false" onAction="#handleExploreFlights" text="Explore flights" />
-      			</items>
-      		</Menu>
-      	</menus>
-      </MenuBar>
-   </top>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity"
+	minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+	prefWidth="600.0" xmlns="http://javafx.com/javafx/8"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="flightTicketsShopUI.client.fxmlcontrollers.UserViewCreditCardsController">
+	<top>
+		<MenuBar BorderPane.alignment="CENTER">
+			<menus>
+				<Menu mnemonicParsing="false" text="Profile">
+					<items>
+						<MenuItem mnemonicParsing="false"
+							onAction="#handleViewProfile" text="View profile" />
+						<MenuItem mnemonicParsing="false"
+							onAction="#handleEditProfile" text="Edit profile" />
+						<MenuItem mnemonicParsing="false"
+							onAction="#handleLogOut" text="Log out" />
+					</items>
+				</Menu>
+				<Menu mnemonicParsing="false" text="Credit cards">
+					<items>
+
+						<MenuItem mnemonicParsing="false"
+							onAction="#handleViewCreditCards" text="View credit cards" />
+					</items>
+				</Menu>
+				<Menu mnemonicParsing="false" text="Flights">
+					<items>
+						<MenuItem mnemonicParsing="false"
+							onAction="#handleExploreFlights" text="Explore flights" />
+					</items>
+				</Menu>
+			</menus>
+		</MenuBar>
+	</top>
+	<center>
+		<VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0"
+			spacing="20.0" BorderPane.alignment="CENTER">
+			<BorderPane.margin>
+				<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+			</BorderPane.margin>
+			<padding>
+				<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+			</padding>
+			<children>
+				<Label text="Credit cards:" />
+				<TableView fx:id="cardsTV" prefHeight="200.0"
+					prefWidth="200.0">
+					<columns>
+						<TableColumn prefWidth="75.0" text="Name">
+							<cellValueFactory>
+								<PropertyValueFactory
+									property="name" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn prefWidth="75.0" text="Surname">
+							<cellValueFactory>
+								<PropertyValueFactory
+									property="surname" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn prefWidth="112.0" text="Card number">
+							<cellValueFactory>
+								<PropertyValueFactory
+									property="cardNumber" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn prefWidth="84.0" text="CVC">
+							<cellValueFactory>
+								<PropertyValueFactory
+									property="cvcNumber" />
+							</cellValueFactory>
+						</TableColumn>
+					</columns>
+				</TableView>
+				<HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0"
+					spacing="20.0">
+					<padding>
+						<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+					</padding>
+					<VBox.margin>
+						<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+					</VBox.margin>
+					<children>
+						<Button mnemonicParsing="false" onAction="#handleAddNew"
+							text="Add new" />
+						<Button mnemonicParsing="false" onAction="#handleDelete"
+							text="Delete" />
+					</children>
+				</HBox>
+			</children>
+		</VBox>
+	</center>
 </BorderPane>

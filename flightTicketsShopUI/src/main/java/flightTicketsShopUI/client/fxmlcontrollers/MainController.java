@@ -123,7 +123,6 @@ public class MainController {
 
 		} catch (BlankFieldsException e) {
 
-			e.printStackTrace();
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Error");
 			alert.setContentText("You need to fill all the fields.");
