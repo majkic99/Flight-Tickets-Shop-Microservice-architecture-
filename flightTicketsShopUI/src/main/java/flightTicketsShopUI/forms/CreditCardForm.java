@@ -50,6 +50,9 @@ public class CreditCardForm {
 		this.id = id;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return cardNumber;
+	}
 	
 }

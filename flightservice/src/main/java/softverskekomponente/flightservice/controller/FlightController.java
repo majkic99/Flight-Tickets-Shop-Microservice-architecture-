@@ -193,6 +193,22 @@ public class FlightController {
 		}
 	}
 
+	@GetMapping("flightByID/{id}")
+	public ResponseEntity<String> flightByID(@PathVariable int id) {
+		try {
+			Optional<Flight> flight = flightRepo.findById(id);
+			if (flight.isPresent()) {
+				return new ResponseEntity<>(flight.get().getAirplane().getName() + ":" + flight.get().getStart() + "-"
+						+ flight.get().getEnd(), HttpStatus.ACCEPTED);
+			}
+
+			throw new Exception();
+
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+
 	@GetMapping("airplanes")
 	public ResponseEntity<List<Airplane>> allAirplanes() {
 		try {
@@ -211,7 +227,7 @@ public class FlightController {
 			if (airplane.isPresent()) {
 				return new ResponseEntity<>(airplane.get().getName(), HttpStatus.ACCEPTED);
 			}
-			
+
 			throw new Exception();
 
 		} catch (Exception e) {

@@ -133,6 +133,7 @@ public class TicketController {
 			ticketRepository.save(ticket);
 			
 			buyTicketForm.setDate(ticket.getDate());
+			buyTicketForm.setPaidFor((int) novaCena);
 			return new ResponseEntity<>(buyTicketForm, HttpStatus.ACCEPTED);
 
 		} catch (Exception e) {
@@ -142,6 +143,8 @@ public class TicketController {
 		}
 
 	}
+	
+	
 	
 	@GetMapping("ticketsFromUser")
 	public ResponseEntity<List<Ticket>> allTicketsFromUser(@RequestHeader(value = "Authorization") String token){

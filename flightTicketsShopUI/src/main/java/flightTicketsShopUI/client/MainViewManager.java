@@ -44,7 +44,6 @@ public class MainViewManager {
 			FXMLLoader loader = appFXMLLoader.getLoader(MainViewManager.class.getResource("/fxml/" + fxml + ".fxml"));
 			try {
 				scene.setRoot(loader.load());
-				mainStage.setMaximized(true);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -52,7 +51,6 @@ public class MainViewManager {
 			FXMLLoader loader = appFXMLLoader.getLoader(MainViewManager.class.getResource("/fxml/" + fxml + ".fxml"));
 			try {
 				scene.setRoot(loader.load());
-				mainStage.setMaximized(false);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

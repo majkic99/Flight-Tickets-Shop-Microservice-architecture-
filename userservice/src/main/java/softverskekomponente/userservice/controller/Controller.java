@@ -33,6 +33,7 @@ import static softverskekomponente.userservice.security.SecurityConstants.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.jms.Queue;
 
@@ -329,6 +330,21 @@ public class Controller {
 			}
 		}
 
+	}
+	
+	@GetMapping("cardUserNameByID/{id}")
+	public ResponseEntity<String> cardUserNameByID(@PathVariable int id) {
+		try {
+			Optional<CreditCard> cc = ccRepo.findById(id);
+			if (cc.isPresent()) {
+				return new ResponseEntity<>(cc.get().getName() + " " + cc.get().getSurname(), HttpStatus.ACCEPTED);
+			}
+			
+			throw new Exception();
+
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
 
 }
