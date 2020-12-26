@@ -38,11 +38,16 @@ public class UserExploreFlightsController {
 
 	@FXML
 	private ComboBox<CreditCardForm> creditCardsCB;
+	
+	private int currPage = 0;
 
 	@FXML
 	public void initialize() {
 
-		ResponseEntity<String> response = HttpUtils.sendGetReturnString("http://localhost:8762/flightservice/flights",
+		
+		String url = "http://localhost:8762/flightservice/flights/" + this.getCurrPage() + "/5";
+		
+		ResponseEntity<String> response = HttpUtils.sendGetReturnString(url,
 				"");
 
 		if (response.getStatusCode() == HttpStatus.ACCEPTED) {
@@ -138,11 +143,19 @@ public class UserExploreFlightsController {
 	}
 
 	public void handleLeft(ActionEvent event) {
-
+		
+		this.setCurrPage(getCurrPage()-1);
+		if(this.getCurrPage() < 0) {
+			this.setCurrPage(0);
+		}
+		System.out.println(getCurrPage());
+		this.initialize();
 	}
 
 	public void handleRight(ActionEvent event) {
-
+		this.setCurrPage(getCurrPage()+1);
+		System.out.println(getCurrPage());
+		this.initialize();
 	}
 
 	public void handleViewProfile(ActionEvent event) {
@@ -174,4 +187,14 @@ public class UserExploreFlightsController {
 		FxmlUtils.logOut(mainViewManager);
 
 	}
+
+	public int getCurrPage() {
+		return currPage;
+	}
+
+	public void setCurrPage(int currPage) {
+		this.currPage = currPage;
+	}
+	
+	
 }

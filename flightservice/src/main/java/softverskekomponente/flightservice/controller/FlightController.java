@@ -243,9 +243,8 @@ public class FlightController {
 			List<Flight> response = new ArrayList<>();
 			for (Flight flight : list) {
 
-				ResponseEntity<Integer> filledNumber = UtilsMethods
-						.sendGetInteger("http://localhost:8762/ticketsservice/TakenSeats/" + flight.getId());
-				if (filledNumber.getBody() < flight.getAirplane().getCapacity() && (!flight.isCanceled())) {
+				
+				if ((!flight.isCanceled())) {
 					response.add(flight);
 				}
 
